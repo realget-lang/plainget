@@ -1,0 +1,5 @@
+#macos
+*.DS_Store
+
+# don't include the build folder
+build/
