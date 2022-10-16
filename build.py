@@ -30,6 +30,7 @@ else:
 # the error code.
 
 status = os.system(f"clang++ {argString} -o build/main")
+
 if status == 0:
     print("\n>> Build successful!")
 else:
