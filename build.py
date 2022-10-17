@@ -29,7 +29,7 @@ else:
 # successful or not, if not then prints
 # the error code.
 
-status = os.system(f"clang++ {argString} -o build/main")
+status = os.system(f"clang++ -std=c++17 {argString} -o build/main")
 
 if status == 0:
     print("\n>> Build successful!")

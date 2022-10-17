@@ -1,6 +1,13 @@
 #include <iostream>
+#include <string>
+#include <string_view>
+#include <iomanip>
+
+
 #include "token.h"
 #include "tokentype.h"
+
+
 
 
 using namespace std;
@@ -13,20 +20,36 @@ string isLoaded()
 }
 
 TokenValue::TokenValue(int a){
-    int value = a;
+    value = a;
+    tokRepr = to_string(a);
+    hasValue = true;
 }
 
 TokenValue::TokenValue(string a){
-    string value = a;
+    value = a;
+    tokRepr = a;
+    hasValue = true;
 }
 
-TokenValue::TokenValue(double a){
-    double value = a;
+TokenValue::TokenValue(float a){
+    value = a;
+    //cout << "FLOATTOKEN:"<<a<<"\n";
+    tokRepr = to_string(a);
+    hasValue = true;
 }
 
 TokenValue::TokenValue()
-{
+{  
+    value = NoneValue();
+    tokRepr = "NONE";
+    hasValue = false;
+}
 
+
+
+bool TokenValue::isNone()
+{
+    return hasValue;
 }
 
 
@@ -40,17 +63,23 @@ Token::Token(TokenType typ, TokenValue val)
 {
     type = typ;
     value = val;
+
+    tokString = "TT="+to_string(typ)+"T"+":VAL="+val.tokRepr;
 }
 
 Token::Token(TokenType typ)
 {
     type = typ;
+    value = TokenValue();
+
+    tokString = "TT="+to_string(typ)+"T";
 }
 
 Token::Token()
 {
-    cout << "Token Initialised!" << "\n";
+    tokString = "😎";
 }
+
 
 TokenValue Token::getValue()
 {
@@ -61,6 +90,8 @@ TokenType Token::getType()
 {
     return Token::type;
 }
+
+
 
 bool Token::isType(TokenType nType)
 {
@@ -78,4 +109,3 @@ void Token::setValue(TokenValue nVal)
 }
 
         
-    

@@ -96,13 +96,17 @@ namespace lexer
         while ((isdigit(currentChar) || currentChar == '.') && currentIdx != deadIndex)
         {
             number += currentChar;
+            if (currentChar == '.')
+            {
+                hasDot = true;
+            }
             advance();
         }
-        cout << "Number making ended with "<<number << "\n";
+        //cout << "Number making ended with "<<number << "\n";
 
         if (hasDot)
         {
-            return Token(DOUBLE_TT,stod(number));
+            return Token(DOUBLE_TT,stof(number));
         }
         return Token(INT_TT,stoi(number));
     }

@@ -10,6 +10,16 @@ using namespace std;
 
 using namespace token;
 
+std::ostream &operator<<(ostream &os, const list<token::Token> &list)
+{   
+    os << "[";
+    for (auto const &i: list) {
+        os << i.tokString << ", ";
+    }
+    os << "]";
+    return os;
+}
+
 int main()
 {
     
@@ -25,16 +35,25 @@ int main()
     while (getline(cin, input)) {
         
 
-        cout << input;
-        cout << "\n";
-
-        lexer::Lexer(input).makeTokens();
+        
 
         if (input == "quit()")
         {
             break;
         }
+
+        if (input != "") //checks for emptiness
+        {
+            list<Token> tokensList = lexer::Lexer(input).makeTokens();
+
+            cout << "Tokens created: "<<tokensList;
+            cout << "\n";
+            
+        }
+        //Continues the console
+        
         cout << "Realget >> ";
+        
     }
 
     //cout << tok.isType(INT) << "\n";
