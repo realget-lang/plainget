@@ -1,20 +1,61 @@
 #include <iostream>
-#include <list>
+#include <vector>
 #include <ctype.h>
 
 #include "token/token.h"
 #include "token/tokentype.h"
 #include "lexer.h"
 
+#include "../error/error.h"
+
 
 using namespace std;
 using namespace token;
+using namespace errors;
 
 int deadIndex = -69;
 
 namespace lexer
 {
-    
+    LexResult::LexResult(vector<Token> tokList)
+    {
+        tokensList = tokList;
+        isError = false;
+    }
+
+    LexResult::LexResult(errors::Error* err)
+    {
+        error = err;
+        isError = true;
+    }
+
+    LexResult::LexResult()
+    {
+        isError = false;
+    }
+
+    LexResult& LexResult::register_(LexResult newRes)
+    {
+        if (newRes.isError)
+        {
+            error = newRes.error;
+            isError = true;
+        }
+        return *this;
+    }
+
+    void LexResult::err(errors::Error* err)
+    {
+        error = err;
+        isError = true;
+    }
+
+    void LexResult::success(vector<Token> tokList)
+    {
+        tokensList = tokList;
+        isError = false;
+    }
+
     Lexer::Lexer(string text)
     {
         txt = text;
@@ -39,7 +80,7 @@ namespace lexer
         }
     }
 
-    list<Token> Lexer::makeTokens()
+    LexResult Lexer::makeTokens()
     {
         
         while (currentIdx != deadIndex)
@@ -76,7 +117,11 @@ namespace lexer
                     }
                     else
                     {
-                        advance();
+                        LexResult l;
+
+                        l.err(new IllegalCharacterError(currentIdx+1,currentIdx+1,string(1,currentChar)));
+
+                        return l;
                     }
                     
             }
@@ -84,8 +129,9 @@ namespace lexer
         }
 
         //cout << "done making tokens!" << "\n";
-        
-        return tokensList;
+        LexResult res(tokensList);
+
+        return res;
     }
 
     Token Lexer::makeNumber()
@@ -99,6 +145,7 @@ namespace lexer
             if (currentChar == '.')
             {
                 hasDot = true;
+                    
             }
             advance();
         }

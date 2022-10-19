@@ -1,15 +1,34 @@
 #pragma once
 
 #include <iostream>
-#include <list>
+#include <vector>
 #include "token/token.h"
 #include "token/tokentype.h"
+
+#include "../error/error.h"
 
 using namespace std;
 using namespace token;
 
 namespace lexer
 {
+    class LexResult
+    {
+        public:
+            errors::Error* error;
+            vector<Token> tokensList;
+            bool isError;
+
+            LexResult(vector<Token> tokList);
+            LexResult(errors::Error* err);
+            LexResult();
+
+            LexResult& register_(LexResult newRes);
+            void err(errors::Error* err);
+            void success(vector<Token> tokList);
+
+    };
+
     class Lexer
     {
         public:
@@ -17,13 +36,13 @@ namespace lexer
             void advance();
 
             Token makeNumber();
-            list<Token> makeTokens();
+            LexResult makeTokens();
             
 
         private:
             string txt;
             char currentChar;
             int currentIdx;
-            list<Token> tokensList;
+            vector<Token> tokensList;
     };
 }

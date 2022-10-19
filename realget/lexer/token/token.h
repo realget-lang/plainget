@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <variant>
-#include <list>
+#include <vector>
 
 #include "tokentype.h"
 

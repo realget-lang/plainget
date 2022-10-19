@@ -6,16 +6,17 @@
 
 #include "parser/nodes.h"
 
+#include "parser/parser.h"
 #include "lexer/lexer.h"
 
 using namespace std;
 
 using namespace token;
 
-std::ostream &operator<<(ostream &os, const list<token::Token> &list)
+std::ostream &operator<<(ostream &os, const vector<token::Token> &vector)
 {   
     os << "[";
-    for (auto const &i: list) {
+    for (auto const &i: vector) {
         os << i.repr << ", ";
     }
     os << "]";
@@ -37,7 +38,7 @@ int main()
     cout<<"\n\n";
     cNode2.print();
     cout<<" is CNODE 2\n\n";
-    
+
     */
 
 
@@ -47,10 +48,6 @@ int main()
 
     cout << "Realget >> ";
     while (getline(cin, input)) {
-        
-
-        
-
         if (input == "quit()")
         {
             break;
@@ -58,10 +55,41 @@ int main()
 
         if (input != "") //checks for emptiness
         {
-            list<Token> tokensList = lexer::Lexer(input).makeTokens();
+            lexer::LexResult res = lexer::Lexer(input).makeTokens();
+            
+            if (res.isError)
+            {
+                // Checks for errors
+                // 'Realget >>' is 10
+                int charPos = 10 + res.error->startPos;
 
-            cout << "Tokens created: "<<tokensList;
-            cout << "\n";
+                // Shows the arrow point first
+                cout <<string(charPos,'-')<<"^"<<"\n\n";
+
+                // Then shows the error
+                cout<<res.error->toString()<<"\n";
+
+
+
+            }
+            else
+            {
+                vector<Token> tokensList = res.tokensList;
+
+                cout << "Tokens created: "<<tokensList;
+                cout << "\n";
+
+                parser::Parser parserObj = parser::Parser(tokensList);
+
+                cout << "parsing: \n";
+                parserObj.parse()->print();
+            
+                parserObj.clearPointers();
+            
+                cout << "\n";
+            }
+            
+
             
         }
         //Continues the console
