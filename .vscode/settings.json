@@ -65,5 +65,6 @@
         "list": "cpp",
         "variant": "cpp",
         "iomanip": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Enabled"
 }

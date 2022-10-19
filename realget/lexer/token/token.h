@@ -28,7 +28,7 @@ namespace token
 
             // Doesn't have a value
             
-            string tokRepr;
+            string repr;
             bool hasValue;
             bool isNone();
 
@@ -43,7 +43,7 @@ namespace token
             TokenType type;
             TokenValue value;
 
-            string tokString;
+            string repr;
 
             string isLoaded();
             

@@ -21,27 +21,27 @@ string isLoaded()
 
 TokenValue::TokenValue(int a){
     value = a;
-    tokRepr = to_string(a);
+    repr = to_string(a);
     hasValue = true;
 }
 
 TokenValue::TokenValue(string a){
     value = a;
-    tokRepr = a;
+    repr = a;
     hasValue = true;
 }
 
 TokenValue::TokenValue(float a){
     value = a;
     //cout << "FLOATTOKEN:"<<a<<"\n";
-    tokRepr = to_string(a);
+    repr = to_string(a);
     hasValue = true;
 }
 
 TokenValue::TokenValue()
 {  
     value = NoneValue();
-    tokRepr = "NONE";
+    repr = "NONE";
     hasValue = false;
 }
 
@@ -64,7 +64,7 @@ Token::Token(TokenType typ, TokenValue val)
     type = typ;
     value = val;
 
-    tokString = "TT="+to_string(typ)+"T"+":VAL="+val.tokRepr;
+    repr = "TT="+to_string(typ)+"T"+":VAL="+val.repr;
 }
 
 Token::Token(TokenType typ)
@@ -72,12 +72,12 @@ Token::Token(TokenType typ)
     type = typ;
     value = TokenValue();
 
-    tokString = "TT="+to_string(typ)+"T";
+    repr = "TT="+to_string(typ)+"T";
 }
 
 Token::Token()
 {
-    tokString = "😎";
+    repr = "😎";
 }
 
 

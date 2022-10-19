@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <list>
 
@@ -12,9 +14,6 @@ namespace parser
         public:
             Parser();
             void advance();
-
-            
-
 
         private:
             token::Token currentToken;
