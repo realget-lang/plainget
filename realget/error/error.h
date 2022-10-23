@@ -39,7 +39,7 @@ namespace errors
 
             string toString() override
             {
-                return "SyntaxError: your syntax was fake at col:"+to_string(startPos)+" ln:"+to_string(line);
+                return "SyntaxError: "+details+" at col:"+to_string(startPos)+" ln:"+to_string(line);
             }
     };
 }

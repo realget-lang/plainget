@@ -5,6 +5,7 @@
 
 #include "../lexer/token/token.h"
 #include "../lexer/token/tokentype.h"
+#include "parse_result.h"
 
 #include "nodes.h"
 
@@ -21,11 +22,11 @@ namespace parser
 
             // For further reading, please refer to grammar.txt
             
-            INode* factor();
-            INode* term();
-            INode* expr();
+            ParseResult factor();
+            ParseResult term();
+            ParseResult expr();
 
-            INode* parse();
+            ParseResult parse();
 
             void clearPointers();
 
@@ -37,9 +38,6 @@ namespace parser
 
             bool isFinished;
             int tokIdx;
-
-
-
     };
 
 }

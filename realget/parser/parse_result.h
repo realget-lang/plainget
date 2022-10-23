@@ -18,6 +18,7 @@ namespace parser
             ParseResult();
 
             ParseResult& register_(ParseResult newRes);
+            INode* getAst();
             void err(errors::Error* err);
             void success(INode* ast);
     };

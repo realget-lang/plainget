@@ -4,12 +4,17 @@
 #include "../lexer/token/token.h"
 #include "../lexer/token/tokentype.h"
 
+#include "../error/error.h"
+
+#include "parse_result.h"
 #include "parser.h"
 
 using namespace parser;
 using namespace token;
+using namespace errors;
 
 vector<INode*> pointers;
+vector<Error*> errs;
 
 Parser::Parser(vector<Token> toks)
 {
@@ -32,9 +37,11 @@ void Parser::advance()
     }
 }
 
-INode* Parser::factor()
+ParseResult Parser::factor()
 {
     Token tok = currentToken;
+    int startPos = tok.startPos;
+    int endPos = tok.endPos;
 
     if (tok.isType(INT_TT)||tok.isType(DOUBLE_TT))
     {
@@ -42,56 +49,93 @@ INode* Parser::factor()
 
         INode* newNode = new NumberNode(tok);
 
+
         pointers.push_back(newNode);
-        return newNode;
+        return ParseResult(newNode);
     }
-    cout << "you dun goof 😎 " <<"\n";
+    // Error* e = new errors::SyntaxError(tok.startPos,tok.endPos,"expected an 'int' or a 'float'");
+    //cout <<e->toString()<<"\n";
+
+    errors::Error* syn = new errors::SyntaxError(tok.startPos,tok.endPos,"expected an 'int' or a 'float'");
+    
+    
+    //errs.push_back(syn);
+    //cout << toErr->toString() << "\n";
+    
+    return ParseResult(syn);
+    
 };
 
-INode* Parser::term()
+ParseResult Parser::term()
 {
-    INode* left = factor();
+    ParseResult left = factor();
+    //cout << "still valid \n";
+    if (left.isError) // If it errors then just return the error
+    {
+        return left;
+    }
     
 
     while (currentToken.isType(MUL_TT)||currentToken.isType(DIV_TT))
     {
         Token oper_tok = currentToken;
         advance();
-        INode* right = factor();
+        ParseResult right = factor();
+
+        if (right.isError) //If it errors, just return the error
+        {
+            return right;
+        }
 
         //INode* nodeCreated = new BinaryOperationNode(left,oper_tok,right);
-        INode* newNode = new BinaryOperationNode(left,oper_tok,right);
+        INode* newNode = new BinaryOperationNode(left.getAst(),oper_tok,right.getAst());
         pointers.push_back(newNode);
 
-        left = newNode;
+        left = ParseResult(newNode);
     }
     return left;
 };
 
-INode* Parser::expr()
+ParseResult Parser::expr()
 {
-    INode* left = term();
+    ParseResult left = term();
+
+    if (left.isError)
+    {
+        return left;
+    }
 
     while (currentToken.isType(PLUS_TT)||currentToken.isType(MINUS_TT))
     {
         Token oper_tok = currentToken;
         advance();
-        INode* right = term();
+        ParseResult right = term();
+        
+
+        if (right.isError)
+        {
+            return right;
+        }
 
         //INode* nodeCreated = new BinaryOperationNode(left,oper_tok,right);
         
-        INode* newNode = new BinaryOperationNode(left,oper_tok,right);
+        INode* newNode = new BinaryOperationNode(left.getAst(),oper_tok,right.getAst());
         pointers.push_back(newNode);
         
-        left = newNode;
+        left = ParseResult(newNode);
     }
     return left;
 }
 
-INode* Parser::parse()
+ParseResult Parser::parse()
 {
-    INode* result = expr();
-    cout << result->getNodeType()<<"\n";
+    ParseResult result = expr();
+    INode* ast = result.getAst();
+    if (result.isError == false)
+    {
+        cout << ast->getNodeType()<<"\n";
+    }
+    
 
     return result;
 }
@@ -102,5 +146,11 @@ void Parser::clearPointers()
         free(pointers[i]);
 
         pointers[i] = NULL;
+    }
+
+    for(std::vector<Error*>::size_type i = 0; i != errs.size(); i++) {
+        free(errs[i]);
+        
+        errs[i] = NULL;
     }
 }

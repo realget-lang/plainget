@@ -6,7 +6,6 @@
 #include "../lexer/token/tokentype.h"
 
 
-using intFloat = variant<int,float>; //testing
 using namespace std;
 
 // Node interface

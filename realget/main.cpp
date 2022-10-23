@@ -4,10 +4,12 @@
 #include "lexer/token/token.h"
 #include "lexer/token/tokentype.h"
 
+#include "parser/parse_result.h"
 #include "parser/nodes.h"
 
 #include "parser/parser.h"
 #include "lexer/lexer.h"
+
 
 #include <chrono>
 using namespace std::chrono;
@@ -80,22 +82,42 @@ int main()
             {
                 vector<Token> tokensList = res.tokensList;
 
-                cout << "Tokens created: "<<tokensList;
-                cout << "\n";
+                
 
                 parser::Parser parserObj = parser::Parser(tokensList);
 
-                cout << "parsing: \n";
-                parserObj.parse()->print();
+                //cout << "parsing: \n";
+                parser::ParseResult ast = parserObj.parse();
+
+                //cout << "parse err:" << ast.isError<<"\n";
+
+                if (ast.isError == false)
+                {
+                    ast.getAst()->print();
+                }
+                else
+                {
+                    
+                    int charPos = 10 + ast.error->startPos;
+
+                    // Shows the arrow point first
+                    cout <<string(charPos,'-')<<"^"<<"\n\n";
+
+                    // Then shows the error
+                    cout<<ast.error->toString()<<"\n";
+                }
+
+                cout << "\nTokens created: "<<tokensList;
+                cout << "\n";
             
                 parserObj.clearPointers();
             
-                cout << "\n";
+                
                 auto stop = high_resolution_clock::now();
 
                 auto duration = duration_cast<microseconds>(stop - start);
 
-                cout <<"\nThat took: "<< duration.count()<<" ms" << endl;
+                cout <<"\nThat took: "<< duration.count()<<" microseconds" << endl;
             }
             
 
