@@ -21,6 +21,8 @@ string isLoaded()
 
 TokenValue::TokenValue(int a){
     value = a;
+    
+
     repr = to_string(a);
     hasValue = true;
 }
@@ -33,6 +35,7 @@ TokenValue::TokenValue(string a){
 
 TokenValue::TokenValue(float a){
     value = a;
+
     //cout << "FLOATTOKEN:"<<a<<"\n";
     repr = to_string(a);
     hasValue = true;
@@ -59,18 +62,26 @@ bool TokenValue::isNone()
 //TokenValue value;
 
 
-Token::Token(TokenType typ, TokenValue val)
+Token::Token(TokenType typ, TokenValue val, int sPos, int ePos, int l)
 {
     type = typ;
     value = val;
 
+    startPos = sPos;
+    endPos = ePos;
+    line = l;
+
     repr = "TT="+to_string(typ)+"T"+":VAL="+val.repr;
 }
 
-Token::Token(TokenType typ)
+Token::Token(TokenType typ, int sPos, int ePos, int l)
 {
     type = typ;
     value = TokenValue();
+
+    startPos = sPos;
+    endPos = ePos;
+    line = l;
 
     repr = "TT="+to_string(typ)+"T";
 }

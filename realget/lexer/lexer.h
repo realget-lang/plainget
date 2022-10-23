@@ -35,7 +35,7 @@ namespace lexer
             Lexer(string text);
             void advance();
 
-            Token makeNumber();
+            LexResult makeNumber();
             LexResult makeTokens();
             
 

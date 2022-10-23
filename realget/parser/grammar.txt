@@ -1,7 +1,7 @@
 // This is the grammar of our langauge, this file is just for reference.
 
-expr:   term Plus|Minus term 
+expr:       term Plus|Minus term 
 
-term:   factor Mul|Div factor
+term:       factor Mul|Div factor
 
-factor: Int|Float
+factor:     Int|Float

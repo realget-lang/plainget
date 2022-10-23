@@ -47,9 +47,13 @@ namespace token
 
             string isLoaded();
             
-            Token(TokenType typ, TokenValue val);
-            Token(TokenType typ);
+            Token(TokenType typ, TokenValue val, int sPos, int ePos, int l);
+            Token(TokenType typ, int sPos, int ePos, int l);
             Token();
+
+            int startPos;
+            int endPos;
+            int line;
 
             string toString();
 

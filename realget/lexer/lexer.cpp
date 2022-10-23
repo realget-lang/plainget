@@ -88,26 +88,32 @@ namespace lexer
             switch (currentChar)
             {
                 case '+':
-                    tokensList.push_back(Token(PLUS_TT));
+                    tokensList.push_back(Token(PLUS_TT,currentIdx+1,currentIdx+1,1));
                     advance();
                     break;
                 case '-':
-                    tokensList.push_back(Token(MINUS_TT));
+                    tokensList.push_back(Token(MINUS_TT,currentIdx+1,currentIdx+1,1));
                     advance();
                     break;
                 case '*':
-                    tokensList.push_back(Token(MUL_TT));
+                    tokensList.push_back(Token(MUL_TT,currentIdx+1,currentIdx+1,1));
                     advance();
                     break;
                 case '/':
-                    tokensList.push_back(Token(DIV_TT));
+                    tokensList.push_back(Token(DIV_TT,currentIdx+1,currentIdx+1,1));
                     advance();
                     break;
                 default:
                     if (isdigit(currentChar))
                     {
                         
-                        Token numTok = makeNumber();
+                        LexResult lexres = makeNumber();
+
+                        if (lexres.isError)
+                        {
+                            return lexres;
+                        }
+                        Token numTok = lexres.tokensList[0];
 
                         tokensList.push_back(numTok);
                     }
@@ -134,8 +140,9 @@ namespace lexer
         return res;
     }
 
-    Token Lexer::makeNumber()
+    LexResult Lexer::makeNumber()
     {
+        int start = currentIdx;
         string number = "";
         bool hasDot = false;
 
@@ -144,18 +151,29 @@ namespace lexer
             number += currentChar;
             if (currentChar == '.')
             {
-                hasDot = true;
-                    
+                if (hasDot == true)
+                {
+                    return LexResult(new SyntaxError(currentIdx+1,currentIdx+1,"are you trying to write an IP address?"));
+                }
+                else
+                {
+                    hasDot = true;
+                }   
             }
             advance();
         }
         //cout << "Number making ended with "<<number << "\n";
+        
+        vector<Token> toRet;
 
         if (hasDot)
         {
-            return Token(DOUBLE_TT,stof(number));
+            toRet.push_back(Token(DOUBLE_TT,stof(number),start,currentIdx+1,1 /* line 1 */));
+            return LexResult(toRet);
         }
-        return Token(INT_TT,stoi(number));
+        toRet.push_back(Token(INT_TT,stoi(number),start,currentIdx+1,1 /* line 1 */));
+        return LexResult(toRet);
+        // return Token(INT_TT,stoi(number),start,currentIdx+1,1 /* line 1 */);
     }
     
             

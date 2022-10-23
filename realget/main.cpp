@@ -9,6 +9,9 @@
 #include "parser/parser.h"
 #include "lexer/lexer.h"
 
+#include <chrono>
+using namespace std::chrono;
+
 using namespace std;
 
 using namespace token;
@@ -55,6 +58,7 @@ int main()
 
         if (input != "") //checks for emptiness
         {
+            auto start = high_resolution_clock::now();
             lexer::LexResult res = lexer::Lexer(input).makeTokens();
             
             if (res.isError)
@@ -87,6 +91,11 @@ int main()
                 parserObj.clearPointers();
             
                 cout << "\n";
+                auto stop = high_resolution_clock::now();
+
+                auto duration = duration_cast<microseconds>(stop - start);
+
+                cout <<"\nThat took: "<< duration.count()<<" ms" << endl;
             }
             
 
