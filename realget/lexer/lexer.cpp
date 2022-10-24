@@ -134,6 +134,7 @@ namespace lexer
             
         }
 
+        tokensList.push_back(Token(EOF_TT,txt.length(),txt.length(),1));
         //cout << "done making tokens!" << "\n";
         LexResult res(tokensList);
 

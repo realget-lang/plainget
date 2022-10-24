@@ -10,4 +10,7 @@ enum TokenType
     MINUS_TT,
     MUL_TT,
     DIV_TT,
+
+    EOF_TT,
+    EO_TT // testing
 };

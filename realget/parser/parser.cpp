@@ -131,9 +131,20 @@ ParseResult Parser::parse()
 {
     ParseResult result = expr();
     INode* ast = result.getAst();
+
+
     if (result.isError == false)
     {
-        cout << ast->getNodeType()<<"\n";
+        if (currentToken.isType(EOF_TT))
+        {
+            cout << ast->getNodeType()<<"\n";
+        }
+        else
+        {
+            ParseResult newResult(new SyntaxError(currentToken.startPos,currentToken.endPos,"shouldn't there be an operation here"));
+            return newResult;
+        }
+        
     }
     
 
