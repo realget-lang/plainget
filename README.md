@@ -6,3 +6,5 @@ also, this is my first time using C++ 😎
 # Build
 
 if you want to build, just run build.py, and there should be a build folder
+
+(you need clang and python3)
